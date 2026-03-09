@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 
 
-def ending(num, first, second, third):
+def get_the_ending(num, first, second, third):
     if (num % 100 < 21 and num % 100 > 4):
         return third
     num = num % 10
@@ -30,17 +30,17 @@ def main():
     template = env.get_template('template.html')
 
     now = datetime.datetime.now()
-    time_year = 1920
-    delta_time = now.year - time_year
+    year_of_foundation = 1920
+    delta_time = now.year - year_of_foundation
 
-    first = "год"
-    second = "года"
-    third = "лет"
+    first_ending = "год"
+    second_ending = "года"
+    third_ending = "лет"
 
 
-    end = ending(delta_time, first, second, third)
+    ending_of_date = get_the_ending(delta_time, first_ending, second_ending, third_ending)
     
-    years = (f'{delta_time} {end}')
+    years = (f'{delta_time} {ending_of_date}')
 
 
     excel_data_three = pandas.read_excel(
@@ -49,14 +49,14 @@ def main():
         na_values=['N/A', 'NA'], keep_default_na=False
     ).to_dict('records')
 
-    wines_lists = collections.defaultdict(list)
+    wines = collections.defaultdict(list)
     for wine in excel_data_three:
-        wines_lists[wine['Категория']].append(wine)
+        wines[wine['Категория']].append(wine)
 
 
     rendered_page = template.render(
-        time=years,
-        wine_collections=wines_lists,
+        time_with_you=years,
+        wine_collections=wines,
     )
 
     with open('index.html', 'w', encoding="utf8") as file:
